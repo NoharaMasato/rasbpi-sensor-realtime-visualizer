@@ -5,6 +5,7 @@ import btle
 import binascii
 import MySQLdb
 import time
+import json
 
 conn = MySQLdb.connect(
     host = 'localhost',
@@ -110,8 +111,10 @@ def main():
     alps.writeCharacteristic(0x0018, struct.pack('<bbb', 0x20, 0x03, 0x01), True)# センサ計測開始
      
 # Main loop --------
+    f = open("setting.json", 'r')
+    setting_json = json.load(f)
     while True:
-        time.sleep(1)
+        time.sleep(setting_json["time-interval"] / 3.0)
         if alps.waitForNotifications(1.0):
             # handleNotification() was called
             continue

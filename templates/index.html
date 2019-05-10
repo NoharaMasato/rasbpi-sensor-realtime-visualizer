@@ -30,19 +30,42 @@
       </div>
     </div>
 
-    <div id="graph" class="epoch" style="height: 200px;"></div>
+    <div id="graph1" class="epoch" style="height: 200px;"></div>
+    <div id="graph2" class="epoch" style="height: 200px;"></div>
+    <div id="graph3" class="epoch" style="height: 200px;"></div>
 
     <script type="text/javascript">
       var ws = new WebSocket("ws://localhost:5000/pipe");
 
-      var data = [
+      var data1 = [
         { label: "Series 1", values: [] },
         { label: "Series 2", values: [] },
         { label: "Series 3", values: [] }
       ];
-      var lineChart = $('#graph').epoch({
+      var lineChart1 = $('#graph1').epoch({
         type: 'time.line',
-        data: data,
+        data: data1,
+        axes: ['left', 'right', 'bottom']
+      });
+      var data2 = [
+        { label: "Series 1", values: [] },
+        { label: "Series 2", values: [] },
+        { label: "Series 3", values: [] }
+      ];
+      var lineChart2 = $('#graph2').epoch({
+        type: 'time.line',
+        data: data2,
+        axes: ['left', 'right', 'bottom']
+      });
+      var data3 = [
+        { label: "Series 1", values: [] },
+        { label: "Series 2", values: [] },
+        { label: "Series 3", values: [] },
+        { label: "Series 4", values: [] }
+      ];
+      var lineChart3 = $('#graph3').epoch({
+        type: 'time.line',
+        data: data3,
         axes: ['left', 'right', 'bottom']
       });
       ws.onmessage = function(e) {
@@ -62,7 +85,9 @@
         document.getElementById("uv").innerHTML = parsed_date.air[3].y;
         document.getElementById("amb").innerHTML = parsed_date.air[4].y;
 
-        lineChart.push(parsed_date.acc);
+        lineChart1.push(parsed_date.acc);
+        lineChart2.push(parsed_date.geo);
+        lineChart3.push(parsed_date.air);
       };
     </script>
 

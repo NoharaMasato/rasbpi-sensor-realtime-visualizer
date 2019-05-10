@@ -34,9 +34,10 @@ def ExecuteQuery(sql):
 def index():
   return render_template('index.html')
 
-
 @app.route('/pipe')
 def pipe():
+  f = open("setting.json", 'r')
+  setting_json = json.load(f)
   if request.environ.get('wsgi.websocket'):
     ws = request.environ['wsgi.websocket']
     while True:
@@ -49,7 +50,7 @@ def pipe():
       air_values = [{"time" : t,"y" : str(svalue[0])}, {"time" : t,"y" : str(svalue[1])}, {"time" : t, "y" : str(svalue[2])}, {"time" : t,"y" : str(svalue[3])}, {"time" : t,"y" : str(svalue[4])}]
       values = json.dumps({'acc' : acc_values,'geo' : geo_values,'air' : air_values})
       ws.send(values)
-      time.sleep(3)
+      time.sleep(setting_json["time-interval"])
 
 if __name__ == '__main__':
   app.debug= True
