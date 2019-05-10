@@ -2,26 +2,11 @@
   <head>
     <title>sensor</title>
     <script type="text/javascript">
-      console.log("aa")
-      var ws = new WebSocket("ws://localhost:5000/pipe");
-      ws.onmessage = function(e) {
-        console.log(e.data)
-        parsed_date = JSON.parse(e.data)
-        document.getElementById("acc_x").innerHTML = parsed_date.acc.x;
-        document.getElementById("acc_y").innerHTML = parsed_date.acc.y;
-        document.getElementById("acc_z").innerHTML = parsed_date.acc.z;
-
-        document.getElementById("geo_x").innerHTML = parsed_date.geo.x;
-        document.getElementById("geo_y").innerHTML = parsed_date.geo.y;
-        document.getElementById("geo_z").innerHTML = parsed_date.geo.z;
-
-        document.getElementById("pres").innerHTML = parsed_date.air[0];
-        document.getElementById("humi").innerHTML = parsed_date.air[1];
-        document.getElementById("temp").innerHTML = parsed_date.air[2];
-        document.getElementById("uv").innerHTML = parsed_date.air[3];
-        document.getElementById("amb").innerHTML = parsed_date.air[4];
-      }
     </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.0/d3.min.js' charset='utf-8'></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/epoch.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/epoch.min.css') }}">
   </head>
   <body>
     <h1>Hello sensor</h1>
@@ -44,5 +29,42 @@
        照度 : <span id='amb'></span><br>
       </div>
     </div>
+
+    <div id="graph" class="epoch" style="height: 200px;"></div>
+
+    <script type="text/javascript">
+      var ws = new WebSocket("ws://localhost:5000/pipe");
+
+      var data = [
+        { label: "Series 1", values: [] },
+        { label: "Series 2", values: [] },
+        { label: "Series 3", values: [] }
+      ];
+      var lineChart = $('#graph').epoch({
+        type: 'time.line',
+        data: data,
+        axes: ['left', 'right', 'bottom']
+      });
+      ws.onmessage = function(e) {
+        console.log(e.data)
+        parsed_date = JSON.parse(e.data)
+        document.getElementById("acc_x").innerHTML = parsed_date.acc[0].y;
+        document.getElementById("acc_y").innerHTML = parsed_date.acc[1].y;
+        document.getElementById("acc_z").innerHTML = parsed_date.acc[2].y;
+
+        document.getElementById("geo_x").innerHTML = parsed_date.geo[0].y;
+        document.getElementById("geo_y").innerHTML = parsed_date.geo[1].y;
+        document.getElementById("geo_z").innerHTML = parsed_date.geo[2].y;
+
+        document.getElementById("pres").innerHTML = parsed_date.air[0].y;
+        document.getElementById("humi").innerHTML = parsed_date.air[1].y;
+        document.getElementById("temp").innerHTML = parsed_date.air[2].y;
+        document.getElementById("uv").innerHTML = parsed_date.air[3].y;
+        document.getElementById("amb").innerHTML = parsed_date.air[4].y;
+
+        lineChart.push(parsed_date.acc);
+      };
+    </script>
+
   </body>
 </html>
