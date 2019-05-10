@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>sensor</title>
+    <script type="text/javascript">
+      console.log("aa")
+      var ws = new WebSocket("ws://localhost:5000/pipe");
+      ws.onmessage = function(e) {
+        console.log(e.data)
+        parsed_date = JSON.parse(e.data)
+        document.getElementById("acc_x").innerHTML = parsed_date.acc.x;
+        document.getElementById("acc_y").innerHTML = parsed_date.acc.y;
+        document.getElementById("acc_z").innerHTML = parsed_date.acc.z;
+
+        document.getElementById("geo_x").innerHTML = parsed_date.geo.x;
+        document.getElementById("geo_y").innerHTML = parsed_date.geo.y;
+        document.getElementById("geo_z").innerHTML = parsed_date.geo.z;
+
+        document.getElementById("pres").innerHTML = parsed_date.air[0];
+        document.getElementById("humi").innerHTML = parsed_date.air[1];
+        document.getElementById("temp").innerHTML = parsed_date.air[2];
+        document.getElementById("uv").innerHTML = parsed_date.air[3];
+        document.getElementById("amb").innerHTML = parsed_date.air[4];
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Hello sensor</h1>
+    <div id="values">
+      <div id="acc">
+       加速度x :  <span id='acc_x'></span><br>
+       加速度y :  <span id='acc_y'></span><br>
+       加速度z : <span id='acc_z'></span><br>
+      </div>
+      <div id="geo">
+       磁場x : <span id='geo_x'></span><br>
+       磁場y : <span id='geo_y'></span><br>
+       磁場z : <span id='geo_z'></span><br>
+      </div>
+      <div id="air">
+       気圧 : <span id='pres'></span><br>
+       湿度 : <span id='humi'></span><br>
+       温度 : <span id='temp'></span><br>
+       UV : <span id='uv'></span><br>
+       照度 : <span id='amb'></span><br>
+      </div>
+    </div>
+  </body>
+</html>
